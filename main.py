@@ -1,6 +1,7 @@
 import os
 import telebot
 from flask import Flask, request
+from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 API_TOKEN = os.environ.get("BOT_TOKEN")
 bot = telebot.TeleBot(API_TOKEN)
@@ -32,9 +33,6 @@ def webhook():
         bot.process_new_updates([update])
         return '', 200
     return 'OK', 200
-
-if __name__ == '__main__':
-    from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 # /yardim komutu → inline butonlu yardım menüsü
 @bot.message_handler(commands=['yardim'])
@@ -71,7 +69,8 @@ def cevapla(call):
         "hesap": "🗑️ Hesap Silme:\nProfil > Ayarlar > Hesap > Hesabı Sil\nSilme başvurusundan sonra 30 gün giriş yapılmazsa hesap silinir. Giriş yapılırsa iptal olur."
     }
 
-    bot.answer_callback_query(call.id)  # Buton basıldı bilgisi ver
+    bot.answer_callback_query(call.id)
     bot.send_message(call.message.chat.id, cevaplar.get(call.data, "Bu konuda bilgi bulunamadı."))
 
+if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
