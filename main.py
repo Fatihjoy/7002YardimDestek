@@ -1,7 +1,9 @@
+import os
 import telebot
 
-API_TOKEN = '7295297648:AAFVkqzjbqd0flQkO2tdO-_gWPSWKxOGbvE'
+API_TOKEN = os.environ.get("BOT_TOKEN")  # ✔️ Çevresel değişkenden al
 bot = telebot.TeleBot(API_TOKEN)
+
 
 @bot.message_handler(content_types=['text'])
 def yanitla(message):
