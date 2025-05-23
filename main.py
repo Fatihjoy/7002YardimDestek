@@ -7,123 +7,149 @@ API_TOKEN = os.environ.get("BOT_TOKEN")
 bot = telebot.TeleBot(API_TOKEN)
 app = Flask(__name__)
 
-# /yardim komutu – kullanıcı destek menüsü
-@bot.message_handler(commands=['yardim'])
+# Yardım başlıkları (25’ten fazla ise gruplanacak)
+yardim_butonlari = [
+    ("📊 CP Seviyeleri", "cp"),
+    ("🏰 Klan Oluşturma", "klan"),
+    ("🎵 Müzik İndirme", "muzik"),
+    ("📦 Şanslı Paket", "sansli"),
+    ("👤 Cinsiyet Değişikliği", "cinsiyet"),
+    ("📱 Doğrulama Kodu", "dogrulama"),
+    ("📧 E-Posta Doğrulama", "eposta"),
+    ("🖼️ Afiş Boyutu", "afis"),
+    ("👥 Profil Boyutu", "profil"),
+    ("🗑️ Hesap Silme", "hesap"),
+    ("🎬 GIF Nasıl Yapılır?", "gifvideo"),
+    ("📌 Çok Önemli", "cokonemli"),
+    ("📋 Yardım Kuralları", "yardimkurallari"),
+    ("⏱️ Atılma Süreleri", "atilmasure"),
+    ("🌍 Panel Ülkeler", "ulkeler"),
+    ("🍇 Meyve Sorunu", "meyveneden"),
+    ("🍇 Meyve Ödülleri", "meyveodul"),
+    ("🎓 Hesap Bağlama", "hesapbagla"),
+    ("📢 Klan Şikayetleri", "klansikayet"),
+    ("⭐ Aristokrasi", "aristokrasi"),
+    ("📸 Özelden İfşa", "ifsa"),
+    ("🌐 Yurtdışı Uygulama", "yurtdisi"),
+    ("🎧 Android Müzik", "androidmuzik"),
+    ("👑 Süper Adminler", "superadmin")
+]
+
+# Hazır bildirim butonları (20’yi aşarsa gruplanacak)
+hazir_butonlari = [
+    ("🕓 Afk", "afk"),
+    ("📱 Uygulama Reklamı", "reklam"),
+    ("📞 Görüntülü Sohbet", "goruntulu"),
+    ("📸 İfşa Bildirimi", "ifsa_bildirim"),
+    ("👥 Klon Kullanıcı", "klon"),
+    ("🗣️ Argo ve Küfür", "kufur"),
+    ("🛡️ Klan Başvurusu", "klanbasvuru"),
+    ("📷 Uygunsuz Arka Plan", "arka"),
+    ("🚫 Şiddet Profil", "siddet"),
+    ("🗳️ Siyasi Profil", "siyasi"),
+    ("👑 Kötüye Aristokrasi", "kotu_aristo"),
+    ("💢 Panel Argo", "panelargo"),
+    ("📍 Panel Türkiye", "paneltr"),
+    ("🔇 Yayın Sabotaj", "sabotaj"),
+    ("📄 Uygunsuz Biyografi", "biyografi"),
+    ("🖼️ Uygunsuz Profil Resmi", "profilresmi"),
+    ("🆔 Uygunsuz Nick", "nick"),
+    ("🙋 Yusuf Bey Bilgi", "yusuf"),
+    ("🗯️ Panel Argo Kullanımı", "panelargo2"),
+    ("💢 Oda Kaosu", "kaos"),
+    ("🚫 Pornografik Görsel", "porno"),
+    ("🚫 Aristo Satışı", "aristosatis"),
+    ("🔞 Oyun Argo", "oyunargo"),
+    ("🌑 Karartılmış Profil", "karartma"),
+    ("👤 Kişisel Bilgi İfşası", "kisiselifsa"),
+    ("📱 Oyun Reklamı", "oyunreklam"),
+    ("🎵 Siyasi Şarkı", "sarkiprop"),
+    ("⚠️ Tekrar Aristo Satışı", "aristo2")
+]
+
+def grup_gonder(chat_id, liste, komut_baslik, prefix):
+    toplam = len(liste)
+    gruplar = [liste[i:i+20] for i in range(0, toplam, 20)]
+    for index, grup in enumerate(gruplar):
+        markup = InlineKeyboardMarkup(row_width=2)
+        markup.add(*[InlineKeyboardButton(text, callback_data=callback) for text, callback in grup])
+        baslik = f"{komut_baslik} {index + 1}/{len(gruplar)}:"
+        bot.send_message(chat_id, baslik, reply_markup=markup)
+
+@bot.message_handler(commands=["yardim"])
 def yardim_mesaji(message):
-    markup = InlineKeyboardMarkup(row_width=2)
-    buttons = [
-        InlineKeyboardButton("📊 CP Seviyeleri", callback_data="cp"),
-        InlineKeyboardButton("🏰 Klan Oluşturma", callback_data="klan"),
-        InlineKeyboardButton("🎵 Müzik İndirme", callback_data="muzik"),
-        InlineKeyboardButton("📦 Şanslı Paket", callback_data="sansli"),
-        InlineKeyboardButton("👤 Cinsiyet Değişikliği", callback_data="cinsiyet"),
-        InlineKeyboardButton("📱 Doğrulama Kodu", callback_data="dogrulama"),
-        InlineKeyboardButton("📧 E-Posta Doğrulama", callback_data="eposta"),
-        InlineKeyboardButton("🖼️ Afiş Boyutu", callback_data="afis"),
-        InlineKeyboardButton("👥 Profil Boyutu", callback_data="profil"),
-        InlineKeyboardButton("🗑️ Hesap Silme", callback_data="hesap"),
-        InlineKeyboardButton("🎬 GIF Nasıl Yapılır?", callback_data="gifvideo"),
-        InlineKeyboardButton("📌 Çok Önemli", callback_data="cokonemli"),
-        InlineKeyboardButton("📋 Yardım Odası Kuralları", callback_data="yardimkurallari"),
-        InlineKeyboardButton("⏱️ Destek Atılma Süreleri", callback_data="atilmasure"),
-        InlineKeyboardButton("🌍 Panel Yönlendirme Ülkeler", callback_data="ulkeler"),
-        InlineKeyboardButton("🍇 Meyve Oyunu Sorunu", callback_data="meyveneden"),
-        InlineKeyboardButton("🍇 Meyve Oyunu Ödülleri", callback_data="meyveodul"),
-        InlineKeyboardButton("🎓 Hesap Bağlama", callback_data="hesapbagla"),
-        InlineKeyboardButton("📢 Klan Şikayetleri", callback_data="klansikayet"),
-        InlineKeyboardButton("⭐ Aristokrasi Hediyesi", callback_data="aristokrasi"),
-        InlineKeyboardButton("📸 Özelden İfşa", callback_data="ifsa"),
-        InlineKeyboardButton("🌐 Yurtdışı Uygulama", callback_data="yurtdisi"),
-        InlineKeyboardButton("🎧 Android Müzik İndirme", callback_data="androidmuzik"),
-        InlineKeyboardButton("👑 Süper Adminlerimiz", callback_data="superadmin")
-    ]
-    markup.add(*buttons)
-    bot.send_message(message.chat.id, "ℹ️ Yardım menüsünden bir konu seçin:", reply_markup=markup)
+    grup_gonder(message.chat.id, yardim_butonlari, "📘 Yardım", "yardim")
 
-# /hazir komutu – admin bildirim şablonları
-@bot.message_handler(commands=['hazir', 'hazır', 'hazirbildirimler', 'hazırbildirimler'])
+@bot.message_handler(commands=["hazir", "hazır", "hazirbildirimler", "hazırbildirimler"])
 def hazir_mesaji(message):
-    markup = InlineKeyboardMarkup(row_width=2)
-    buttons = [
-        InlineKeyboardButton("🕓 Afk", callback_data="afk"),
-        InlineKeyboardButton("📱 Farklı Uygulama Reklamı", callback_data="reklam"),
-        InlineKeyboardButton("📞 Görüntülü Sohbet", callback_data="goruntulu"),
-        InlineKeyboardButton("📸 İfşa Bildirimi", callback_data="ifsa_bildirim"),
-        InlineKeyboardButton("👥 Klon Kullanıcı", callback_data="klon"),
-        InlineKeyboardButton("🗣️ Argo ve Küfür", callback_data="kufur"),
-        InlineKeyboardButton("🛡️ Klan Başvurusu", callback_data="klanbasvuru"),
-        InlineKeyboardButton("📷 Uygunsuz Arka Plan", callback_data="arka"),
-        InlineKeyboardButton("🚫 Şiddet Profil", callback_data="siddet"),
-        InlineKeyboardButton("🗳️ Siyasi Profil", callback_data="siyasi"),
-        InlineKeyboardButton("👑 Kötüye Kullanılan Aristokrasi", callback_data="kotu_aristo"),
-        InlineKeyboardButton("💢 Panel Argo", callback_data="panelargo"),
-        InlineKeyboardButton("📍 Panel Türkiye", callback_data="paneltr"),
-        InlineKeyboardButton("🔇 Yayın Sabotaj", callback_data="sabotaj"),
-        InlineKeyboardButton("📄 Uygunsuz Biyografi", callback_data="biyografi"),
-        InlineKeyboardButton("🖼️ Uygunsuz Profil Resmi", callback_data="profilresmi"),
-        InlineKeyboardButton("🆔 Uygunsuz Nick", callback_data="nick"),
-        InlineKeyboardButton("🙋 Yusuf Bey Bilgi", callback_data="yusuf"),
-        InlineKeyboardButton("🗯️ Panel Argo Kullanımı", callback_data="panelargo2"),
-        InlineKeyboardButton("💢 Oda Kaosu", callback_data="kaos"),
-        InlineKeyboardButton("🚫 Pornografik Görsel", callback_data="porno"),
-        InlineKeyboardButton("🚫 Aristo Satışı", callback_data="aristosatis"),
-        InlineKeyboardButton("🔞 Oyun Argo", callback_data="oyunargo"),
-        InlineKeyboardButton("🌑 Karartılmış Profil", callback_data="karartma"),
-        InlineKeyboardButton("👤 Kişisel Bilgi İfşası", callback_data="kisiselifsa"),
-        InlineKeyboardButton("📱 Oyun Reklamı", callback_data="oyunreklam"),
-        InlineKeyboardButton("🎵 Siyasi Şarkı", callback_data="sarkiprop"),
-        InlineKeyboardButton("⚠️ Tekrar Aristo Satışı", callback_data="aristo2")
-    ]
-    markup.add(*buttons)
-    bot.send_message(message.chat.id, "📝 Hazır bildirim şablonlarından birini seçin:", reply_markup=markup)
+    grup_gonder(message.chat.id, hazir_butonlari, "📝 Hazır Bildirim", "hazir")
 
-# Callback'ler
 @bot.callback_query_handler(func=lambda call: True)
 def cevapla(call):
     cevaplar = {
-        # yardım cevapları (uzun halleri)
-        "cp": "📊 CP Seviyeleri ve Gereken Hediyeler:\n\n0 - 1 → 1.000.000\n1 - 2 → 5.000.000\n2 - 3 → 10.000.000\n3 - 4 → 20.000.000\n4 - 5 → 50.000.000\n5 - 6 → 100.000.000\n\nToplam: 186.000.000",
-        "klan": "🏰 Mevcut klanı dağıttıktan sonra, yeni bir klan için bir sonraki ayın başına kadar beklemeniz gerekir.",
+        # Yardım cevapları
+        "cp": "📊 CP Seviyeleri ve Gereken Hediyeler:\n0 - 1 → 1.000.000\n1 - 2 → 5.000.000\n2 - 3 → 10.000.000\n3 - 4 → 20.000.000\n4 - 5 → 50.000.000\n5 - 6 → 100.000.000\nToplam: 186.000.000",
+        "klan": "🏰 Mevcut klanı dağıttıktan sonra, yeni klan için bir sonraki ayın başına kadar beklemelisiniz.",
         "muzik": "🎵 Müzik İndirme:\nhttps://mp3indirdur.life/",
-        "sansli": "📦 Şanslı Paket:\nCihaz olağandışı kullanıldığı için sistem tarafından riskli cihaz olarak tanımlanmış olabilir. Normal kullanım sonrası 24 saat içinde tekrar kullanılabilir.",
-        "cinsiyet": "👤 Cinsiyet Değişikliği:\nKayıttan itibaren 30 gün içinde değiştirilebilir. Bu süreden sonra yapılan talepler işleme alınmaz.",
-        "dogrulama": "📱 Doğrulama Kodu:\n24 saat içinde en fazla 3 kez alınabilir. Aksi durumda 24 saat beklenmelidir.",
-        "eposta": "📧 E-Posta Doğrulama:\nHer saat en fazla 5 kez alınabilir. 1 saat sonra tekrar denenebilir.",
-        "afis": "🖼️ Etkinlik Afişi Boyutu:\n636x362 piksel",
-        "profil": "👥 Oda ve Kişi Profil Fotoğrafı:\n800x800 piksel",
-        "hesap": "🗑️ Hesap Silme:\nProfil > Ayarlar > Hesap > Hesabı Sil\nSilme başvurusundan sonra 30 gün giriş yapılmazsa hesap silinir. Giriş yapılırsa iptal olur.",
-        "cokonemli": "📌 1 - Cinsiyet değişimi 1 Aralık itibarıyla artık kesinlikle yapılmamaktadır.\n2 - Klan ile alakalı bilgi verilmez. Sadece RCS admin talebi alınır.\n3 - Çekim ve Svip hakkında bilgi verilmez. Sadece 7010 ID 66 Şifreli odaya yönlendirilir.",
-        "yardimkurallari": "📋 Yardım Odası Kuralları:\n1 - Mikrofon paylaşımı yapılmaz.\n2 - Yayın teslimi admin izniyle olur.\n3 - Nick dışında hitap edilmez.\n4 - Kaosa karışılmaz.\n5 - 10 dakikayı geçen yayın alınmaz.",
-        "atilmasure": "⏱️ Destek Odası Atılma Süreleri:\nAfk: 10 dk\nYayını Sabote Eden: 10 dk\nKüfür Eden: 10 dk",
-        "ulkeler": "🌍 Panel Yönlendirme Ülkeler:\nAzerbaycan, Türkmenistan, Özbekistan, Tacikistan → 7007 ID'li odaya yönlendirilir.",
-        "meyveneden": "🍇 Meyve Oyunu Sorunu:\nYeni kullanıcılarda meyve oyunlarının açılması için Onur ve Cazibe seviyeleri 3. seviye olmalıdır.",
-        "meyveodul": "🍇 Meyve Oyunu Ödülleri:\n1. olup aristokrasisini alamayan kullanıcılar Yusuf Bey'e veya Kumru Hanım'a yönlendirilmelidir.",
-        "hesapbagla": "🎓 Hesap Bağlama ve Kaldırma:\nAyarlar > Hesap > Telefon/E-posta/Google/Apple seçin > Bağla veya Bağlantıyı Kaldır.",
-        "klansikayet": "📢 Klan Şikayetleri:\nKlan hakkında bilgi verilmez. Sadece başvuru ve RCS talebi alınır.",
-        "aristokrasi": "⭐ Aristokrasi Hediye:\nDetaylı bilgi için kullanıcılar VIP yardım destek odası (7010 ID, 66 Şifre) yönlendirilir.",
-        "ifsa": "📸 Özelden İfşa:\nTarihi kağıda yazıp anlık selfie çekilecek. Ardından profil SS'leri ile birlikte panel adminine bildirim sağlanacak.",
-        "yurtdisi": "🌐 Yurtdışı Uygulama:\niPhone: https://youtu.be/uQxuilRNtuc\nAndroid: https://youtu.be/uQxuilRNtuc",
-        "androidmuzik": "🎧 Android Müzik:\nhttps://www.snaptube.com/tr/",
-        "superadmin": "👑 Süper Adminlerimiz:\nElif Hanım, Yusufcan Bey, Kumru Hanım, Kadir Bey, Furkan Bey, Adelph Bey",
+        "sansli": "📦 Şanslı Paket:\nCihaz olağandışı kullanıldıysa sistem tarafından riskli olarak işaretlenmiş olabilir. Normal kullanım sonrası 24 saat içinde yeniden denenebilir.",
+        "cinsiyet": "👤 Cinsiyet Değişikliği:\n30 gün içerisinde değiştirilebilir. Süre sonrası talep geçersiz olur.",
+        "dogrulama": "📱 Doğrulama Kodu:\n24 saatte en fazla 3 kez alınabilir. Aksi durumda 24 saat bekleyin.",
+        "eposta": "📧 E-Posta Doğrulama:\nSaatte en fazla 5 kez alınabilir. 1 saat sonra tekrar deneyin.",
+        "afis": "🖼️ Etkinlik Afiş Boyutu: 636x362 piksel",
+        "profil": "👥 Oda ve Kişi Profil Fotoğrafı: 800x800 piksel",
+        "hesap": "🗑️ Hesap Silme:\nProfil > Ayarlar > Hesap > Hesabı Sil → 30 gün giriş yapılmazsa hesap silinir.",
+        "cokonemli": "📌 Çok Önemli:\n1- Cinsiyet değişimi yapılmaz\n2- Klan hakkında bilgi verilmez\n3- Çekim bilgisi verilmez, sadece link yönlendirilir (7010 ID, 66 Şifre).",
+        "yardimkurallari": "📋 Yardım Odası Kuralları:\n1. Mikrofona sadece tek kişi alınır.\n2. Yayın devri admin izniyle yapılır.\n3. Nick dışında hitap edilmez.\n4. Kaosa katılınmaz.",
+        "atilmasure": "⏱️ Destek Odasından Atılma Süreleri:\nAFK: 10 dk\nYayını sabote: 10 dk\nKüfür: 10 dk\nNot: Elif Hanım bilgisi olmadan uzun atım yapılmaz.",
+        "ulkeler": "🌍 Panel Ülkeleri:\nAzerbaycan, Türkmenistan, Özbekistan, Tacikistan → 7007 ID'li odaya yönlendirilir.",
+        "meyveneden": "🍇 Meyve Oyunu Sorunu:\nYeni kullanıcılar için Onur ve Cazibe seviyesi 3 olmalıdır.",
+        "meyveodul": "🍇 Meyve Oyunu Ödülleri:\n1. olup aristokrasi alamayan kullanıcılar Yusuf Bey veya Kumru Hanım’a yönlendirilir.",
+        "hesapbagla": "🎓 Hesap Bağlama:\nProfilim > Ayarlar > Hesap → Bağla/Kaldır menüsünden yapılabilir.",
+        "klansikayet": "📢 Klan Şikayetleri:\nKlan bilgisi verilmez. Sadece başvuru alınır, RCS adminlerine yönlendirilir.",
+        "aristokrasi": "⭐ Aristokrasi Hediye Etme:\nDetaylı bilgi için 7010 ID ve 66 Şifreli Vip Yardım Odası'na yönlendirin.",
+        "ifsa": "📸 Özelden İfşa:\nTarihli kağıt + selfie ile teyit alınır. İfşa edilen kişinin profil SS’i ile admin etiketlenir.",
+        "yurtdisi": "🌐 Yurtdışı Uygulama İndirme:\niPhone & Android:\nhttps://youtu.be/uQxuilRNtuc",
+        "androidmuzik": "🎧 Android Müzik İndirme:\nhttps://www.snaptube.com/tr/",
+        "superadmin": "👑 Süper Adminlerimiz:\nElif (Genel)\nYusufcan & Kumru (VIP)\nKadir (Klanlar)\nFurkan (Reklam)\nAdelph (Türkî Devletler)",
 
-        # özel video butonu
-        "gifvideo": None,
-
-        # hazır bildirim örnekleri
+        # Hazır bildirimler aşağıya eklenmiştir:
         "afk": "ID :\nAfk kaldığı için 10 dakika uzaklaştırıldı\n@elifdn61",
-        # diğerleri için de uzun cevaplar eklenebilir
+        "reklam": "ID :\nFarklı uygulama reklamı.\n@",
+        "goruntulu": "ID :\nGörüntülü Sohbet Talep Ediyor.\n@elifdn61",
+        "ifsa_bildirim": "İfşa Yapan Hesap :\nİfşası Yapılan Hesap :\nTeyit Resmi özelinize gönderildi.\n@",
+        "klon": "Klonlanan Kullanıcı ID:\nKlonlama Yapan Kullanıcı ID:\n@",
+        "kufur": "ID :\nMikrofonda argo ve küfür.\n@",
+        "klanbasvuru": "Klan Başvurusu\nOda ID :\nKullanıcı ID :\n@",
+        "arka": "ID :\nUygunsuz arka plan resmi.\n@",
+        "siddet": "ID :\nŞiddet içerikli profil resmi.\n@",
+        "siyasi": "ID :\nSiyasi profil resmi.\n@",
+        "kotu_aristo": "Oda ID :\nAristokrasisini kötüye kullanan kullanıcı mevcut.\n@",
+        "panelargo": "ID :\nPanel üzerinde argo ve küfür.\n@",
+        "paneltr": "ID :\nPanel Türkiye olarak güncellenecek.\n@elifdn61",
+        "sabotaj": "ID :\nYayını sabote ettiği için 10 dakika uzaklaştırıldı\n@elifdn61",
+        "biyografi": "ID :\nUygunsuz biyografi.\n@",
+        "profilresmi": "ID :\nUygunsuz Profil resmi.\n@",
+        "nick": "ID :\nUygunsuz nick name.\n@",
+        "yusuf": "ID :\nYusuf Bey kullanıcı bilgi almak istiyor ama VIP odasındaki asistanlar yardımcı olmuyor.\n@Yusufcan31",
+        "panelargo2": "ID :\nPanelde Argo Kullanımı.\n@",
+        "kaos": "ID :\nOda içinde küfür eden diğer kullanıcılar ile adminleri kışkırtıyor.\n@",
+        "porno": "ID :\nPanel üzerinde pornografik görsel paylaşımı.\n@",
+        "aristosatis": "ID :\nKural dışı aristokrasi satışı.\n@",
+        "oyunargo": "ID :\nOyun aktifken argo ve küfür kullanımı mevcut.\n@",
+        "karartma": "ID :\n\"Karartılmış profil resmi\"\n@",
+        "kisiselifsa": "İfşa Yapan Hesap:\nİfşası Yapılan Hesap:\nKişisel bilgi paylaşımı.\n@",
+        "oyunreklam": "ID :\nFarklı uygulama oyunları gösterimi.\n@",
+        "sarkiprop": "ID :\nPropaganda amaçlı mikrofonda siyasi şarkı çalmak.\n@",
+        "aristo2": "ID :\nTekrar kural dışı aristokrasi satışı.\n@"
     }
 
     if call.data == "gifvideo":
         with open("gif_nasil_yapilir.mp4", "rb") as video:
             bot.send_video(call.message.chat.id, video)
     else:
-        yanit = cevaplar.get(call.data, "Bu konuda bilgi bulunamadı.")
-        bot.send_message(call.message.chat.id, yanit)
-
+        bot.send_message(call.message.chat.id, cevaplar.get(call.data, "Bu konuda bilgi bulunamadı."))
     bot.answer_callback_query(call.id)
 
-# webhook endpoint
 @app.route('/', methods=['POST'])
 def webhook():
     if request.headers.get('content-type') == 'application/json':
@@ -133,6 +159,5 @@ def webhook():
         return '', 200
     return 'OK', 200
 
-# local çalıştırma
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
