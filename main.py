@@ -7,6 +7,26 @@ API_TOKEN = os.environ.get("BOT_TOKEN")
 bot = telebot.TeleBot(API_TOKEN)
 app = Flask(__name__)
 
+# Düz mesajlara yanıt (örnek: cp seviyeleri)
+@bot.message_handler(content_types=['text'])
+def yanitla(message):
+    text = message.text.strip().lower()
+    if text == "cp seviyeleri":
+        yanit = (
+            "CP Seviyeleri ve Gereken Hediyeler:\n\n"
+            "0 - 1 → 1.000.000\n"
+            "1 - 2 → 5.000.000\n"
+            "2 - 3 → 10.000.000\n"
+            "3 - 4 → 20.000.000\n"
+            "4 - 5 → 50.000.000\n"
+            "5 - 6 → 100.000.000\n\n"
+            "Toplam: 186.000.000"
+        )
+        bot.reply_to(message, yanit)
+    else:
+        bot.reply_to(message, "Bu konuda bilgi bulunamadı.")
+
+# Yardım komutu (butonlu menü)
 @bot.message_handler(commands=['yardim'])
 def yardim_mesaji(message):
     markup = InlineKeyboardMarkup(row_width=2)
@@ -21,62 +41,58 @@ def yardim_mesaji(message):
         InlineKeyboardButton("🖼️ Afiş Boyutu", callback_data="afis"),
         InlineKeyboardButton("👥 Profil Boyutu", callback_data="profil"),
         InlineKeyboardButton("🗑️ Hesap Silme", callback_data="hesap"),
-        InlineKeyboardButton("🎬 GIF Nasıl Yapılır?", callback_data="gifvideo")
+        InlineKeyboardButton("🎬 GIF Nasıl Yapılır?", callback_data="gifvideo"),
+        InlineKeyboardButton("📌 Çok Önemli", callback_data="cokonemli"),
+        InlineKeyboardButton("📋 Yardım Odası Kuralları", callback_data="yardimkurallari"),
+        InlineKeyboardButton("⏱️ Destek Atılma Süreleri", callback_data="atilmasure"),
+        InlineKeyboardButton("🌍 Panel Yönlendirme Ülkeler", callback_data="ulkeler"),
+        InlineKeyboardButton("🍇 Meyve Oyunu Sorunu", callback_data="meyveneden"),
+        InlineKeyboardButton("🍇 Meyve Oyunu Ödülleri", callback_data="meyveodul"),
+        InlineKeyboardButton("🎓 Hesap Bağlama", callback_data="hesapbagla"),
+        InlineKeyboardButton("📢 Klan Şikayetleri", callback_data="klansikayet"),
+        InlineKeyboardButton("⭐ Aristokrasi Hediyesi", callback_data="aristokrasi"),
+        InlineKeyboardButton("📸 Özelden İfşa", callback_data="ifsa"),
+        InlineKeyboardButton("🌐 Yurtdışı Uygulama", callback_data="yurtdisi"),
+        InlineKeyboardButton("🎧 Android Müzik İndirme", callback_data="androidmuzik"),
+        InlineKeyboardButton("👑 Süper Adminlerimiz", callback_data="superadmin")
     ]
     markup.add(*buttons)
     bot.send_message(message.chat.id, "ℹ️ Yardım menüsünden bir konu seçin:", reply_markup=markup)
 
+# Callback handler
 @bot.callback_query_handler(func=lambda call: True)
 def cevapla(call):
     cevaplar = {
-        "cp": "📊 CP Seviyeleri:\n0 - 1 → 1M\n1 - 2 → 5M\n2 - 3 → 10M\n3 - 4 → 20M\n4 - 5 → 50M\n5 - 6 → 100M\nToplam: 186M",
-        "klan": "Klan dağıtımından sonra yeni klan başvurusu için 1 ay beklenmeli.",
+        "cp": "CP Seviyeleri...",
+        "klan": "Klan Oluşturma...",
         "muzik": "https://mp3indirdur.life/",
-        "sansli": "Cihaz olağandışı kullanımda → riskli cihaz. 24 saat içinde tekrar alınabilir.",
-        "cinsiyet": "Kayıttan itibaren 30 gün içinde değiştirilebilir.",
-        "dogrulama": "24 saatte en fazla 3 kez SMS kodu alınabilir.",
-        "eposta": "Saatte en fazla 5 kez e-posta doğrulama kodu alınabilir.",
-        "afis": "Etkinlik Afişi Boyutu: 636x362",
-        "profil": "Oda/Kişi Profil Boyutu: 800x800",
-        "hesap": "Profil → Ayarlar → Hesap → Hesabı Sil\n30 gün giriş yapılmazsa hesap silinir.",
-        "gif": "🎬 GIF yapımı hakkında bilgi için aşağıdaki videoyu izleyin."
+        "sansli": "Şanslı Paket...",
+        "cinsiyet": "Cinsiyet Değişikliği...",
+        "dogrulama": "Doğrulama Kodu...",
+        "eposta": "E-Posta Doğrulama...",
+        "afis": "636x362",
+        "profil": "800x800",
+        "hesap": "Hesap Silme...",
+        "cokonemli": "1- Cinsiyet...",
+        "yardimkurallari": "1- Mikrofon...",
+        "atilmasure": "AFK: 10 dk...",
+        "ulkeler": "7007 ID...",
+        "meyveneden": "Cazibe ve onur seviyesi...",
+        "meyveodul": "Yusuf veya Kumru...",
+        "hesapbagla": "Profilim > Ayarlar...",
+        "klansikayet": "Klanlar hakkında...",
+        "aristokrasi": "7010 ID - 66 Şifre",
+        "ifsa": "Tarihli kağıt ve selfie...",
+        "yurtdisi": "iPhone: https://youtu.be/uQxuilRNtuc\nAndroid: ...",
+        "androidmuzik": "https://www.snaptube.com/tr/",
+        "superadmin": "Elif, Yusufcan, Kumru..."
     }
-
     if call.data == "gifvideo":
-        try:
-            with open("gif_nasil_yapilir.mp4", "rb") as video:
-                bot.send_video(call.message.chat.id, video)
-        except Exception as e:
-            bot.send_message(call.message.chat.id, f"⚠️ Video gönderilemedi: {e}")
-    elif call.data in cevaplar:
-        bot.send_message(call.message.chat.id, cevaplar[call.data])
+        with open("gif_nasil_yapilir.mp4", "rb") as video:
+            bot.send_video(call.message.chat.id, video)
     else:
-        bot.send_message(call.message.chat.id, "Bu konuda bilgi bulunamadı.")
-
-@bot.message_handler(func=lambda message: True)
-def yanitla(message):
-    text = message.text.strip().lower()
-
-    manuel_cevaplar = {
-        "cp seviyeleri": "📊 CP Seviyeleri:\n0 - 1 → 1M\n1 - 2 → 5M\n2 - 3 → 10M\n3 - 4 → 20M\n4 - 5 → 50M\n5 - 6 → 100M\nToplam: 186M",
-        "klan oluşturma": "Klan dağıtımından sonra yeni klan başvurusu için 1 ay beklenmeli.",
-        "müzik indirme programı": "https://mp3indirdur.life/",
-        "şanslı paket": "Cihaz olağandışı kullanımda → riskli cihaz. 24 saat içinde tekrar alınabilir.",
-        "cinsiyet değişikliği": "Kayıttan itibaren 30 gün içinde değiştirilebilir.",
-        "neden doğrulama kodu alınamıyor": "24 saatte en fazla 3 kez SMS kodu alınabilir.",
-        "e-posta doğrulama kodu": "Saatte en fazla 5 kez e-posta doğrulama kodu alınabilir.",
-        "etkinlik afişi boyutu": "Etkinlik Afişi Boyutu: 636x362",
-        "oda ve kişi profili": "Oda/Kişi Profil Boyutu: 800x800",
-        "hesap silme": "Profil → Ayarlar → Hesap → Hesabı Sil\n30 gün giriş yapılmazsa hesap silinir.",
-        "gif nasıl yapılır": "🎬 GIF yapımı hakkında bilgi için /yardim yazarak butona tıklayın."
-    }
-
-    if text in manuel_cevaplar:
-        bot.reply_to(message, manuel_cevaplar[text])
-    elif text == "/yardim":
-        yardim_mesaji(message)
-    else:
-        bot.reply_to(message, "Bu konuda bilgi bulunamadı.")
+        bot.send_message(call.message.chat.id, cevaplar.get(call.data, "Bu konuda bilgi bulunamadı."))
+    bot.answer_callback_query(call.id)
 
 @app.route('/', methods=['POST'])
 def webhook():
@@ -88,4 +104,4 @@ def webhook():
     return 'OK', 200
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
