@@ -7,7 +7,6 @@ API_TOKEN = os.environ.get("BOT_TOKEN")
 bot = telebot.TeleBot(API_TOKEN)
 app = Flask(__name__)
 
-# /yardim ana menü
 @bot.message_handler(commands=['yardim'])
 def yardim_index(message):
     markup = InlineKeyboardMarkup(row_width=1)
@@ -18,7 +17,6 @@ def yardim_index(message):
     markup.add(*buttons)
     bot.send_message(message.chat.id, "ℹ️ Yardım bölümlerinden birini seçin:", reply_markup=markup)
 
-# /yardim1 detaylı yardım 1
 @bot.message_handler(commands=['yardim1'])
 def yardim1(message):
     markup = InlineKeyboardMarkup(row_width=2)
@@ -46,7 +44,6 @@ def yardim1(message):
     markup.add(*buttons)
     bot.send_message(message.chat.id, "📘 Yardım 1:", reply_markup=markup)
 
-# /yardim2 detaylı yardım 2
 @bot.message_handler(commands=['yardim2'])
 def yardim2(message):
     markup = InlineKeyboardMarkup(row_width=2)
@@ -60,7 +57,6 @@ def yardim2(message):
     markup.add(*buttons)
     bot.send_message(message.chat.id, "📗 Yardım 2:", reply_markup=markup)
 
-# /hazir ana menü
 @bot.message_handler(commands=['hazir', 'hazır', 'hazirbildirimler', 'hazırbildirimler'])
 def hazir_index(message):
     markup = InlineKeyboardMarkup(row_width=1)
@@ -71,15 +67,14 @@ def hazir_index(message):
     markup.add(*buttons)
     bot.send_message(message.chat.id, "ℹ️ Hazır bildirim bölümlerinden birini seçin:", reply_markup=markup)
 
-# /hazir1 detaylı hazır 1
 @bot.message_handler(commands=['hazir1'])
 def hazir1(message):
     markup = InlineKeyboardMarkup(row_width=2)
     buttons = [
         InlineKeyboardButton("🕓 Afk", callback_data="afk"),
-        InlineKeyboardButton("📱 Farklı Uygulama Reklamı", callback_data="reklam"),
+        InlineKeyboardButton("📱 Uygulama Reklamı", callback_data="reklam"),
         InlineKeyboardButton("📞 Görüntülü Sohbet", callback_data="goruntulu"),
-        InlineKeyboardButton("📸 İfşa Bildirimi", callback_data="ifsa_bildirim"),
+        InlineKeyboardButton("📸 İfşa", callback_data="ifsa_bildirim"),
         InlineKeyboardButton("👥 Klon Kullanıcı", callback_data="klon"),
         InlineKeyboardButton("🗣️ Argo ve Küfür", callback_data="kufur"),
         InlineKeyboardButton("🛡️ Klan Başvurusu", callback_data="klanbasvuru"),
@@ -90,7 +85,6 @@ def hazir1(message):
     markup.add(*buttons)
     bot.send_message(message.chat.id, "📘 Hazır Bildirim 1:", reply_markup=markup)
 
-# /hazir2 detaylı hazır 2
 @bot.message_handler(commands=['hazir2'])
 def hazir2(message):
     markup = InlineKeyboardMarkup(row_width=2)
@@ -100,28 +94,72 @@ def hazir2(message):
         InlineKeyboardButton("📍 Panel Türkiye", callback_data="paneltr"),
         InlineKeyboardButton("🔇 Yayın Sabotaj", callback_data="sabotaj"),
         InlineKeyboardButton("📄 Uygunsuz Biyografi", callback_data="biyografi"),
-        InlineKeyboardButton("🖼️ Uygunsuz Profil Resmi", callback_data="profilresmi"),
+        InlineKeyboardButton("🖼️ Profil Resmi", callback_data="profilresmi"),
         InlineKeyboardButton("🆔 Uygunsuz Nick", callback_data="nick"),
-        InlineKeyboardButton("🙋 Yusuf Bey Bilgi", callback_data="yusuf"),
-        InlineKeyboardButton("🗯️ Panel Argo Kullanımı", callback_data="panelargo2"),
+        InlineKeyboardButton("🙋 Yusuf Bilgi", callback_data="yusuf"),
+        InlineKeyboardButton("🗯️ Panel Argo 2", callback_data="panelargo2"),
         InlineKeyboardButton("💢 Oda Kaosu", callback_data="kaos")
     ]
     markup.add(*buttons)
     bot.send_message(message.chat.id, "📗 Hazır Bildirim 2:", reply_markup=markup)
 
-# Yardım ve hazır yönlendirme
 @bot.callback_query_handler(func=lambda call: True)
 def buton_yonlendir(call):
-    if call.data == "yardim1":
-        yardim1(call.message)
-    elif call.data == "yardim2":
-        yardim2(call.message)
-    elif call.data == "hazir1":
-        hazir1(call.message)
-    elif call.data == "hazir2":
-        hazir2(call.message)
+    cevaplar = {
+        "cp": "📊 CP Seviyeleri ve Gereken Hediyeler:\n0 - 1 → 1.000.000...",
+        "klan": "Klan Oluşturma hakkında bilgi...",
+        "muzik": "🎵 Müzik indirme: https://mp3indirdur.life",
+        "sansli": "📦 Şanslı Paket durumu...",
+        "cinsiyet": "👤 Cinsiyet bilgisi değişimi...",
+        "dogrulama": "📱 Doğrulama Kodu açıklaması...",
+        "eposta": "📧 E-Posta doğrulama bilgisi...",
+        "afis": "🖼️ Afiş Boyutu: 636x362",
+        "profil": "👥 Profil Boyutu: 800x800",
+        "hesap": "🗑️ Hesap Silme adımları...",
+        "cokonemli": "📌 Çok önemli bilgiler...",
+        "yardimkurallari": "📋 Yardım kuralları...",
+        "atilmasure": "⏱️ Atılma süreleri açıklaması...",
+        "ulkeler": "🌍 Yönlendirilen ülkeler: ...",
+        "meyveneden": "🍇 Meyve oyunu sorunu...",
+        "meyveodul": "🍇 Meyve oyunu ödülleri...",
+        "hesapbagla": "🎓 Hesap bağlama işlemleri...",
+        "klansikayet": "📢 Klan şikayetleri...",
+        "aristokrasi": "⭐ Aristokrasi hediyesi hakkında...",
+        "ifsa": "📸 Özelden ifşa prosedürü...",
+        "yurtdisi": "🌐 Yurtdışı uygulama indirme...",
+        "androidmuzik": "🎧 Android müzik indirme: https://www.snaptube.com/tr/",
+        "superadmin": "👑 Süper admin listesi...",
+        "afk": "ID :\nAfk kaldığı için 10 dakika uzaklaştırıldı\n@elifdn61",
+        "reklam": "ID :\nFarklı uygulama reklamı.\n@",
+        "goruntulu": "ID :\nGörüntülü Sohbet Talep Ediyor.\n@elifdn61",
+        "ifsa_bildirim": "İfşa Yapan Hesap :\nİfşası Yapılan Hesap :\nTeyit Resmi özelinize gönderildi.\n@",
+        "klon": "Klonlanan Kullanıcı ID:\nKlonlama Yapan Kullanıcı ID:\n@",
+        "kufur": "ID :\nMikrofonda argo ve küfür.\n@",
+        "klanbasvuru": "Klan Başvurusu\nOda ID :\nKullanıcı ID :\n@",
+        "arka": "ID :\nUygunsuz arka plan resmi.\n@",
+        "siddet": "ID :\nŞiddet içerikli profil resmi.\n@",
+        "siyasi": "ID :\nSiyasi profil resmi.\n@",
+        "kotu_aristo": "Oda ID :\nAristokrasisini kötüye kullanan kullanıcı mevcut.\n@",
+        "panelargo": "ID :\nPanel üzerinde argo ve küfür.\n@",
+        "paneltr": "ID :\nPanel Türkiye olarak güncellenecek.\n@elifdn61",
+        "sabotaj": "ID :\nYayını sabote ettiği için 10 dakika uzaklaştırıldı\n@elifdn61",
+        "biyografi": "ID :\nUygunsuz biyografi.\n@",
+        "profilresmi": "ID :\nUygunsuz Profil resmi.\n@",
+        "nick": "ID :\nUygunsuz nick name .\n@",
+        "yusuf": "ID :\nYusuf Bey kullanıcı bilgi almak istiyor ama VIP odasındaki asistanlar yardımcı olmuyor.\n@Yusufcan31",
+        "panelargo2": "ID :\nPanelde Argo Kullanımı.\n@",
+        "kaos": "ID :\nOda içinde diğer kullanıcılar da küfür etmekte. Ancak bu kullanıcı, adminleri kışkırtıyor.\n@"
+    }
+    if call.data == "gifvideo":
+        with open("gif_nasil_yapilir.mp4", "rb") as video:
+            bot.send_video(call.message.chat.id, video)
+    elif call.data in ["yardim1", "yardim2"]:
+        yardim1(call.message) if call.data == "yardim1" else yardim2(call.message)
+    elif call.data in ["hazir1", "hazir2"]:
+        hazir1(call.message) if call.data == "hazir1" else hazir2(call.message)
     else:
-        bot.answer_callback_query(call.id, text="Yükleniyor...")
+        bot.send_message(call.message.chat.id, cevaplar.get(call.data, "Bu konuda bilgi bulunamadı."))
+    bot.answer_callback_query(call.id)
 
 @app.route('/', methods=['POST'])
 def webhook():
