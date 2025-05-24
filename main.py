@@ -63,8 +63,7 @@ hazir_butonlari = [
     ("🌑 Karartılmış Profil", "karartma"),
     ("👤 Kişisel Bilgi İfşası", "kisiselifsa"),
     ("📱 Oyun Reklamı", "oyunreklam"),
-    ("🎵 Siyasi Şarkı", "sarkiprop"),
-    ("⚠️ Tekrar Aristo Satışı", "aristo2")
+    ("🎵 Siyasi Şarkı", "sarkiprop")
 ]
 
 def grup_gonder(chat_id, liste, komut_baslik, prefix):
@@ -114,33 +113,32 @@ def cevapla(call):
 
         # Hazır bildirimler aşağıya eklenmiştir:
         "afk": "ID :\n\nAfk kaldığı için 10 dakika uzaklaştırıldı\n\n@elifdn61",
-        "reklam": "ID :\nFarklı uygulama reklamı.\n@",
-        "goruntulu": "ID :\nGörüntülü Sohbet Talep Ediyor.\n@elifdn61",
-        "ifsa_bildirim": "İfşa Yapan Hesap :\nİfşası Yapılan Hesap :\nTeyit Resmi özelinize gönderildi.\n@",
-        "klon": "Klonlanan Kullanıcı ID:\nKlonlama Yapan Kullanıcı ID:\n@",
-        "kufur": "ID :\nMikrofonda argo ve küfür.\n@",
-        "klanbasvuru": "Klan Başvurusu\nOda ID :\nKullanıcı ID :\n@",
-        "arka": "ID :\nUygunsuz arka plan resmi.\n@",
-        "siddet": "ID :\nŞiddet içerikli profil resmi.\n@",
-        "siyasi": "ID :\nSiyasi profil resmi.\n@",
-        "kotu_aristo": "Oda ID :\nAristokrasisini kötüye kullanan kullanıcı mevcut.\n@",
-        "panelargo": "ID :\nPanel üzerinde argo ve küfür.\n@",
-        "paneltr": "ID :\nPanel Türkiye olarak güncellenecek.\n@elifdn61",
-        "sabotaj": "ID :\nYayını sabote ettiği için 10 dakika uzaklaştırıldı\n@elifdn61",
-        "biyografi": "ID :\nUygunsuz biyografi.\n@",
-        "profilresmi": "ID :\nUygunsuz Profil resmi.\n@",
-        "nick": "ID :\nUygunsuz nick name.\n@",
-        "yusuf": "ID :\nYusuf Bey kullanıcı bilgi almak istiyor ama VIP odasındaki asistanlar yardımcı olmuyor.\n@Yusufcan31",
-        "panelargo2": "ID :\nPanelde Argo Kullanımı.\n@",
-        "kaos": "ID :\nOda içinde küfür eden diğer kullanıcılar ile adminleri kışkırtıyor.\n@",
-        "porno": "ID :\nPanel üzerinde pornografik görsel paylaşımı.\n@",
-        "aristosatis": "ID :\nKural dışı aristokrasi satışı.\n@",
-        "oyunargo": "ID :\nOyun aktifken argo ve küfür kullanımı mevcut.\n@",
-        "karartma": "ID :\n\"Karartılmış profil resmi\"\n@",
-        "kisiselifsa": "İfşa Yapan Hesap:\nİfşası Yapılan Hesap:\nKişisel bilgi paylaşımı.\n@",
-        "oyunreklam": "ID :\nFarklı uygulama oyunları gösterimi.\n@",
-        "sarkiprop": "ID :\nPropaganda amaçlı mikrofonda siyasi şarkı çalmak.\n@",
-        "aristo2": "ID :\nTekrar kural dışı aristokrasi satışı.\n@"
+        "reklam": "ID :\n\nFarklı uygulama reklamı.\n\n@",
+        "goruntulu": "ID :\n\nGörüntülü Sohbet Talep Ediyor.\n\n@elifdn61",
+        "ifsa_bildirim": "İfşa Yapan Hesap :\n\nİfşası Yapılan Hesap :\n\nTeyit Resmi özelinize gönderildi.\n\n@",
+        "klon": "Klonlanan Kullanıcı ID:\n\nKlonlama Yapan Kullanıcı ID:\n\n@",
+        "kufur": "ID :\n\nMikrofonda argo ve küfür.\n\n@",
+        "klanbasvuru": "Klan Başvurusu\n\nOda ID :\nKullanıcı ID :\n\n@",
+        "arka": "ID :\n\nUygunsuz arka plan resmi.\n\n@",
+        "siddet": "ID :\n\nŞiddet içerikli profil resmi.\n\n@",
+        "siyasi": "ID :\n\nSiyasi profil resmi.\n\n@",
+        "kotu_aristo": "Oda ID :\n\nAristokrasisini kötüye kullanan kullanıcı mevcut.\n\n@",
+        "panelargo": "ID :\n\nPanel üzerinde argo ve küfür.\n\n@",
+        "paneltr": "ID :\n\nPanel Türkiye olarak güncellenecek.\n\n@elifdn61",
+        "sabotaj": "ID :\n\nYayını sabote ettiği için 10 dakika uzaklaştırıldı\n\n@elifdn61",
+        "biyografi": "ID :\n\nUygunsuz biyografi.\n\n@",
+        "profilresmi": "ID :\n\nUygunsuz Profil resmi.\n\n@",
+        "nick": "ID :\n\nUygunsuz nick name.\n\n@",
+        "yusuf": "ID :\n\nYusuf Bey kullanıcı bilgi almak istiyor ama VIP odasındaki asistanlar yardımcı olmuyor.\n\n@Yusufcan31",
+        "panelargo2": "ID :\n\nPanelde Argo Kullanımı.\n\n@",
+        "kaos": "ID :\n\nOda içinde küfür eden diğer kullanıcılar ile adminleri kışkırtıyor.\n\n@",
+        "porno": "ID :\n\nPanel üzerinde pornografik görsel paylaşımı.\n\n@",
+        "aristosatis": "ID :\n\nKural dışı aristokrasi satışı.\n\n@",
+        "oyunargo": "ID :\n\nOyun aktifken argo ve küfür kullanımı mevcut.\n\n@",
+        "karartma": "ID :\n\n\"Karartılmış profil resmi\"\n\n@",
+        "kisiselifsa": "İfşa Yapan Hesap:\n\nİfşası Yapılan Hesap:\n\nKişisel bilgi paylaşımı.\n\n@",
+        "oyunreklam": "ID :\n\nFarklı uygulama oyunları gösterimi.\n\n@",
+        "sarkiprop": "ID :\n\nPropaganda amaçlı mikrofonda siyasi şarkı çalmak.\n\n@"
     }
 
     if call.data == "gifvideo":
