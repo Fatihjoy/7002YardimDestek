@@ -32,12 +32,7 @@ yardim_butonlari = [
     ("📸 Özelden İfşa", "ifsa"),
     ("🌐 Yurtdışı Uygulama", "yurtdisi"),
     ("🎧 Android Müzik", "androidmuzik"),
-    ("👑 Süper Adminler", "superadmin"),
-    ("🧹 Depolama Temizleme", "depovideo"),
-    ("📲 Android İzinler", "izinvideo"),
-    ("✅ Mesajları Okundu Yap", "okunduvideo"),
-    ("🎶 Android Müzik Yükleme", "muzikvideo2")
-
+    ("👑 Süper Adminler", "superadmin")
 ]
 
 # Hazır bildirim butonları (20’yi aşarsa gruplanacak)
@@ -147,28 +142,10 @@ def cevapla(call):
     }
 
     if call.data == "gifvideo":
-    with open("gif_nasil_yapilir.mp4", "rb") as video:
-        bot.send_video(call.message.chat.id, video)
-
-elif call.data == "depovideo":
-    with open("2025-05-24 03.21.15.mp4", "rb") as video:
-        bot.send_video(call.message.chat.id, video)
-
-elif call.data == "izinvideo":
-    with open("2025-05-24 03.21.35.mp4", "rb") as video:
-        bot.send_video(call.message.chat.id, video)
-
-elif call.data == "okunduvideo":
-    with open("2025-05-24 03.21.43.mp4", "rb") as video:
-        bot.send_video(call.message.chat.id, video)
-
-elif call.data == "muzikvideo2":
-    with open("2025-05-24 03.21.52.mp4", "rb") as video:
-        bot.send_video(call.message.chat.id, video)
-
-else:
-    bot.send_message(call.message.chat.id, cevaplar.get(call.data, "Bu konuda bilgi bulunamadı."))
-
+        with open("gif_nasil_yapilir.mp4", "rb") as video:
+            bot.send_video(call.message.chat.id, video)
+    else:
+        bot.send_message(call.message.chat.id, cevaplar.get(call.data, "Bu konuda bilgi bulunamadı."))
     bot.answer_callback_query(call.id)
 
 @app.route('/', methods=['POST'])
